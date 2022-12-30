@@ -45,41 +45,48 @@ def _jobs_to_df(jobs: list) -> pd.DataFrame:
     for job in jobs:
         df = pd.DataFrame([job])
         # tried to operate listwise but sometimes we get
-        last_run = pd.DataFrame([job['last_run']])
-        author = pd.DataFrame([job['author']])
+        last_run = pd.DataFrame([job["last_run"]])
+        author = pd.DataFrame([job["author"]])
         # if last_run or author are empty
-        if len(last_run) == 0:
+        last_run_empty = len(job["last_run"]) == 0
+        if last_run_empty:
             last_run_cols = [
-                'id', 'state', 'createdAt', 'startedAt', 'finishedAt', 'error'
+                "id",
+                "state",
+                "createdAt",
+                "startedAt",
+                "finishedAt",
+                "error",
             ]
             last_run = pd.DataFrame({}, columns=last_run_cols)
-        if len(author) == 0:
-            author_cols = ['id', 'name', 'username', 'initials', 'online']
+        author_empty = len(job["author"]) == 0
+        if author_empty:
+            author_cols = ["id", "name", "username", "initials", "online"]
             author = pd.DataFrame({}, columns=author_cols)
         # update cols and col names
-        for col in ['online', 'initials']:  # TODO: this kind of drop should be a function
+        for col in ["online", "initials"]:  # TODO: functionize this
             if col in author.columns:
                 author = author.drop(columns=[col])
-        author.columns = [f'author_{col}' for col in author.columns]
-        for col in ['state', 'createdAt', 'id']:  # TODO: this kind of drop should be a function
+        author.columns = [f"author_{col}" for col in author.columns]
+        for col in ["state", "createdAt", "id"]:  # TODO: functionize this
             if col in last_run.columns:
                 last_run = last_run.drop(columns=[col])
 
         unpacked_jobs = unpacked_jobs + [pd.concat([df, last_run, author], axis=1)]
 
-    date_cols = ['updated', 'created', 'started', 'finished']
-    date_col_mapping = {f'{col}_at': np.datetime64 for col in date_cols}
+    date_cols = ["updated", "created", "started", "finished"]
+    date_col_mapping = {f"{col}_at": np.datetime64 for col in date_cols}
     return (
         pd.concat(unpacked_jobs, axis=0)
-        .rename(columns={'startedAt': 'started_at', 'finishedAt': 'finished_at'})
+        .rename(columns={"startedAt": "started_at", "finishedAt": "finished_at"})
         .astype(date_col_mapping)
     )
 
 
 def query_jobs_between(
-        jobs_df: pd.DataFrame,
-        start_date: np.datetime64 | str,
-        end_date: np.datetime64 | str
+    jobs_df: pd.DataFrame,
+    start_date: np.datetime64 | str,
+    end_date: np.datetime64 | str,
 ) -> pd.DataFrame:
     """
     Return jobs that were updated between start_date and end_date, inclusive, from
@@ -92,5 +99,5 @@ def query_jobs_between(
     start = utils.format_date(start_date)
     end = utils.format_date(end_date)
     if start == end:
-        raise SyntaxWarning('Start and end date should not be identical.')
-    return jobs_df.query('(@start <= updated_at)').query('updated_at <= @end')
+        raise SyntaxWarning("Start and end date should not be identical.")
+    return jobs_df.query("(@start <= updated_at)").query("updated_at <= @end")
