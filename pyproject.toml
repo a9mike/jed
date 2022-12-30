@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "jed"
+version = "0.1.0"
+description = "This library aids with civis interactions"
+authors = ["anissa.mike <anissa.mike@cleanchoiceenergy.com>"]
+readme = "README.md"
+repository = "github.com/cleanchoiceenergy/jed"
+
+[tool.poetry.dependencies]
+python = ">=3.9, <3.12"
+beautifulsoup4 = "^4.11.1"
+bokeh = "^2.4.3"
+boto3 = "^1.24.87"
+cauldron-notebook = "^1.0.9"
+civis = "^1.16.0"
+dask = "^2022.10.0"
+flask-sqlalchemy = "^3.0.2"
+Jinja2 = "^3.1.2"
+json5 = "^0.9.10"
+jsonschema = "^4.16.0"
+jupyter = "^1.0.0"
+jupyterlab = "^3.5"
+Markdown = "^3.4.1"
+numpy = "^1.23.3"
+pandas = "^1.5.0"
+pipper = "^0.10.0"
+plotly = "^5.11.0"
+psycopg2-binary = "^2.9.4"
+redshift-connector = "^2.0.909"
+scikit-learn = "^1.1.3"
+snowflake-connector-python = "^2.8.0"
+snowflake-sqlalchemy = "^1.4.2"
+statsmodels = "^0.13.2"
+sqlalchemy = "^1.4.41"
+sqlalchemy-redshift = "^0.8.11"
+xgboost = "^1.6.2"
+datascienceutils = {git="git@github.com:cleanchoice/data-science-utils.git", tag="v0.7.0"}
+pytest = "^7.2.0"
+DateTime = "^4.9"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+coverage = "*"
+flake8 = "*"
+flake8-black = "*"
+mypy = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-runner = "*"
+taskipy = "*"
+
+[tool.taskipy.tasks]
+black = "black ."
+flake = "flake8 ."
+mypy = "mypy . --ignore-missing-imports"
+pytest = "pytest . --cov-report term-missing --cov=."
+lint = "task black && task flake && task mypy"
+check = "task black && task flake && task mypy && task pytest"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

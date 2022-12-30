@@ -1,0 +1,15 @@
+[flake8]
+# match black
+max-line-length = 88
+extend-ignore = E203
+
+# https://www.python.org/dev/peps/pep-0008/#should-a-line-break-before-or-after-a-binary-operator
+ignore = W503, E501, BLK100
+extend-select = W504
+
+exclude =
+    __pycache__,
+    .git,
+    build,
+    .pytest_cache,
+    .mypy_cache
