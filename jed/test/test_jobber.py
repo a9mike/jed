@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from jed import jobs
+from jed import jobber
 from unittest.mock import Mock
 import pytest
 
@@ -49,7 +49,7 @@ def test_list_job_chunk():
     """Should iterate five times and return a formatted DataFrame"""
     civis_client = Mock()
     civis_client.jobs.list.return_value = JOBS
-    result = jobs.list_job_chunk(civis_client)
+    result = jobber.list_job_chunk(civis_client)
 
     assert isinstance(result, pd.DataFrame)
     assert len(result) == 10
@@ -68,7 +68,7 @@ def test_list_job_chunk_none():
             "author": {},
         }
     ]
-    result = jobs.list_job_chunk(civis_client, 1)
+    result = jobber.list_job_chunk(civis_client, 1)
 
     assert isinstance(result, pd.DataFrame)
     assert list(result.columns) == EXPECTED_COLS
@@ -76,11 +76,11 @@ def test_list_job_chunk_none():
 
 def test_query_jobs_between():
     """Should only return data for _DT1"""
-    result = jobs.query_jobs_between(JOBS_DF, _DT1, "2020-01-02")
+    result = jobber.query_jobs_between(JOBS_DF, _DT1, "2020-01-02")
     assert len(result) == 1
 
 
 def test_query_jobs_between_error():
     """Should raise warning"""
     with pytest.raises(SyntaxWarning):
-        jobs.query_jobs_between(JOBS_DF, _DT1, _DT1)
+        jobber.query_jobs_between(JOBS_DF, _DT1, _DT1)

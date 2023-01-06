@@ -6,6 +6,21 @@ from pytest import mark
 from jed import utils
 
 
+def test_get_client():
+    """Should recognize a client already exists and pass original value back"""
+    client = utils.get_client("client")
+    assert client == "client"
+
+
+# TODO: Can't get patch to work
+# @patch("civis.civis.APIClient", return_value="client")
+# def test_get_client_generate(APIClient):
+#     """Should generate and return client"""
+#     client = utils.get_client()
+#     assert client == "client"
+#     APIClient.assert_called()
+
+
 @mark.parametrize(
     "dt, expected",
     [
