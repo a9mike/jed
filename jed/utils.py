@@ -1,4 +1,13 @@
+import civis
 import numpy as np
+
+
+def get_client(civis_client: civis.APIClient | None = None) -> civis.APIClient:
+    """Check for civis client, if none generate one"""
+    client = civis_client
+    if not civis_client:
+        client = civis.APIClient()
+    return client
 
 
 def format_date(dt: np.datetime64 | str) -> np.datetime64:
